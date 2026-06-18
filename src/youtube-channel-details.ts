@@ -11,6 +11,12 @@ interface RapidApiChannelDetailsResponse {
   subscriberCountText?: string;
   videoCount?: string | number;
   viewCount?: string | number;
+  stats?: {
+    subscribers?: string | number;
+    subscribersText?: string;
+    videos?: string | number;
+    views?: string | number;
+  };
   country?: string;
   joinedDateText?: string;
   avatar?: unknown;
@@ -64,9 +70,11 @@ export async function fetchChannelDetails(
     normalized: {
       channelId: response.channelId ?? response.id ?? channelId,
       title: response.title ?? "",
-      subscribers: parseNumber(response.subscriberCount ?? response.subscriberCountText),
-      videos: parseNumber(response.videoCount),
-      views: parseNumber(response.viewCount),
+      subscribers: parseNumber(
+        response.subscriberCount ?? response.subscriberCountText ?? response.stats?.subscribers
+      ),
+      videos: parseNumber(response.videoCount ?? response.stats?.videos),
+      views: parseNumber(response.viewCount ?? response.stats?.views),
       country: response.country ?? "",
       joined: response.joinedDateText ?? ""
     }

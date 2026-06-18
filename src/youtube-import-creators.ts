@@ -8,6 +8,7 @@ import { pathToFileURL } from "node:url";
 interface ChannelSeed {
   channelId: string;
   platform: "YouTube";
+  handle?: string;
   country?: string;
   language?: string;
   notes?: string;
@@ -43,6 +44,73 @@ function topicFromTitle(title: string): string[] {
   return [...topics];
 }
 
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function cleanText(value: string): string {
+  return value
+    .replaceAll("\\u0026", "&")
+    .replaceAll('\\"', '"')
+    .replaceAll("\\/", "/")
+    .replace(/[^\x20-\x7E]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function parseViews(value: string): number | null {
+  const normalized = value.toLowerCase().replace(/views?/g, "").replace(/,/g, "").trim();
+  const match = normalized.match(/^([\d.]+)\s*([km])?$/i);
+  if (!match) {
+    const raw = Number(normalized);
+    return Number.isFinite(raw) ? raw : null;
+  }
+
+  const base = Number(match[1]);
+  if (!Number.isFinite(base)) return null;
+  if (match[2] === "m") return Math.round(base * 1_000_000);
+  if (match[2] === "k") return Math.round(base * 1_000);
+  return Math.round(base);
+}
+
+async function fetchPublicChannelVideos(handle: string) {
+  const html = await fetch(`https://www.youtube.com/${handle}/videos`, {
+    headers: {
+      "accept-language": "en-US,en;q=0.9",
+      "user-agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/125 Safari/537.36"
+    }
+  }).then((response) => response.text());
+
+  const videos: Array<{
+    id: string;
+    title: string;
+    views: number | null;
+    viewText: string;
+    published: string;
+    url: string;
+  }> = [];
+  const regex =
+    /"lockupMetadataViewModel":\{"title":\{"content":"([^"]+)"\}.*?"metadataParts":\[\{"text":\{"content":"([^"]+ views)"\}/gs;
+  let match;
+  while ((match = regex.exec(html)) && videos.length < 20) {
+    const title = cleanText(match[1]);
+    const viewText = cleanText(match[2]);
+    if (!videos.some((video) => video.title === title)) {
+      videos.push({
+        id: `public:${videos.length}`,
+        title,
+        views: parseViews(viewText),
+        viewText,
+        published: "",
+        url: `https://www.youtube.com/${handle}/videos`
+      });
+    }
+  }
+
+  return videos;
+}
+
 export async function importYouTubeCreators(): Promise<YouTubeCreatorCandidate[]> {
   loadLocalEnv();
 
@@ -50,10 +118,13 @@ export async function importYouTubeCreators(): Promise<YouTubeCreatorCandidate[]
   const candidates: YouTubeCreatorCandidate[] = [];
 
   for (const seed of seeds) {
-    const [details, videos] = await Promise.all([
-      fetchChannelDetails(seed.channelId),
-      fetchChannelVideos(seed.channelId)
-    ]);
+    const details = await fetchChannelDetails(seed.channelId);
+    await sleep(1_500);
+    let videos = await fetchChannelVideos(seed.channelId);
+    if (videos.length === 0 && seed.handle) {
+      videos = await fetchPublicChannelVideos(seed.handle);
+    }
+    await sleep(1_500);
 
     const normalized = details.normalized as {
       title?: string;
@@ -68,7 +139,7 @@ export async function importYouTubeCreators(): Promise<YouTubeCreatorCandidate[]
               videosWithViews.length
           )
         : null;
-    const recentTitles = videos.slice(0, 8).map((video) => video.title);
+    const recentTitles = videos.slice(0, 8).map((video) => cleanText(video.title));
     const topics = [...new Set(recentTitles.flatMap(topicFromTitle))];
     const contentReference =
       recentTitles.find((title) => title.toLowerCase().includes("meal prep")) ??

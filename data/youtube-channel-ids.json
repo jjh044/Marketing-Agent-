@@ -1,9 +1,34 @@
 [
   {
-    "channelId": "UCJ5v_MCY6GNUBTO8-D3XoAg",
+    "channelId": "UCAMqFkI6LauvsE6m8Cr-l3g",
+    "handle": "@rashayab",
     "platform": "YouTube",
     "country": "United States",
     "language": "English",
-    "notes": "Seed channel from RapidAPI example."
+    "notes": "Rashaya B example creator."
+  },
+  {
+    "channelId": "UCyiUTHYUSCqc69MRPX3v0tw",
+    "handle": "@MadAboutFood",
+    "platform": "YouTube",
+    "country": "United States",
+    "language": "English",
+    "notes": "Mad About Food example creator."
+  },
+  {
+    "channelId": "UCB3-sO2_YkQgodNNDmGsacQ",
+    "handle": "@LaurenMJansen",
+    "platform": "YouTube",
+    "country": "United States",
+    "language": "English",
+    "notes": "Lauren M Jansen example creator."
+  },
+  {
+    "channelId": "UCoby6FkviOBrFXcM2kWtqyA",
+    "handle": "@tonicamachas",
+    "platform": "YouTube",
+    "country": "Australia",
+    "language": "English",
+    "notes": "Toni Camacho example creator."
   }
 ]
