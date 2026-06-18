@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "tsx src/index.ts",
+    "dashboard": "tsx src/dashboard.ts",
+    "dashboard:open": "powershell -ExecutionPolicy Bypass -File scripts/start-dashboard.ps1",
     "check": "tsc --noEmit"
   },
   "dependencies": {

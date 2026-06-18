@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>App Marketing Agent</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">App Marketing Agent</p>
+        <h1>Meal Prep AI Outreach Review</h1>
+      </div>
+      <div class="status-strip" aria-label="Campaign status">
+        <span id="sender">Sender</span>
+        <span id="dailyLimit">Daily limit</span>
+        <span id="approvalRule">Approval</span>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar" aria-label="Creator queue">
+        <div class="toolbar">
+          <button class="filter active" data-filter="all" type="button">All</button>
+          <button class="filter" data-filter="pending" type="button">Pending</button>
+          <button class="filter" data-filter="approved" type="button">Approved</button>
+          <button class="filter" data-filter="rejected" type="button">Rejected</button>
+        </div>
+        <div id="creatorList" class="creator-list"></div>
+      </aside>
+
+      <section class="detail" aria-live="polite">
+        <div id="emptyState" class="empty-state">
+          Select a creator to review the score, outreach angle, and draft message.
+        </div>
+
+        <article id="detailPanel" class="detail-panel hidden">
+          <div class="detail-header">
+            <div>
+              <p id="creatorMeta" class="eyebrow"></p>
+              <h2 id="creatorName"></h2>
+            </div>
+            <div id="scoreBadge" class="score-badge"></div>
+          </div>
+
+          <div class="metrics" aria-label="Creator metrics">
+            <div>
+              <span>Followers</span>
+              <strong id="followers"></strong>
+            </div>
+            <div>
+              <span>Engagement</span>
+              <strong id="engagement"></strong>
+            </div>
+            <div>
+              <span>Country</span>
+              <strong id="country"></strong>
+            </div>
+            <div>
+              <span>Status</span>
+              <strong id="decisionStatus"></strong>
+            </div>
+          </div>
+
+          <section class="section">
+            <h3>Why This Creator</h3>
+            <ul id="reasonList" class="reason-list"></ul>
+          </section>
+
+          <section class="section">
+            <h3>Message Draft</h3>
+            <div class="message-tabs">
+              <button id="emailTab" class="tab active" type="button">Email</button>
+              <button id="dmTab" class="tab" type="button">DM</button>
+            </div>
+            <textarea id="messageDraft" spellcheck="true"></textarea>
+          </section>
+
+          <div class="actions">
+            <button id="rejectButton" class="secondary" type="button">Reject</button>
+            <button id="approveButton" class="primary" type="button">Approve</button>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>

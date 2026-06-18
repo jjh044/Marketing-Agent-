@@ -59,6 +59,20 @@ npm run start
 
 This currently runs against sample creator data so the workflow can be reviewed before connecting live data sources.
 
+Run the local approval dashboard:
+
+```bash
+npm run dashboard
+```
+
+Then open:
+
+```text
+http://localhost:5173
+```
+
+Approvals and rejections are saved to `data/approval-decisions.json`.
+
 ## Next Integrations
 
 - Creator discovery APIs or curated CSV imports.
