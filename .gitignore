@@ -4,3 +4,4 @@ dist/
 .env.local
 *.log
 data/reddit-comments-latest.json
+data/youtube-channel-videos-latest.json

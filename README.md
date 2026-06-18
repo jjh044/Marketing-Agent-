@@ -103,6 +103,17 @@ npm run reddit:comments -- "https://www.reddit.com/r/example/comments/post_id/ti
 
 That saves the latest fetched comments to `data/reddit-comments-latest.json`.
 
+## YouTube View Research
+
+To fetch recent videos from a YouTube channel through RapidAPI:
+
+```powershell
+$env:YOUTUBE_RAPIDAPI_KEY="your-key"
+npm run youtube:channel -- "UCJ5v_MCY6GNUBTO8-D3XoAg"
+```
+
+That saves the latest channel video data and average view estimate to `data/youtube-channel-videos-latest.json`.
+
 ## Next Integrations
 
 - Creator discovery APIs or curated CSV imports.

@@ -38,6 +38,15 @@ Initial filters:
 - Public contact method, such as email in bio or official creator contact.
 - Content that naturally supports an app recommendation.
 
+YouTube channel validation can use:
+
+```powershell
+$env:YOUTUBE_RAPIDAPI_KEY="your-key"
+npm run youtube:channel -- "UCJ5v_MCY6GNUBTO8-D3XoAg"
+```
+
+The command fetches recent videos through RapidAPI and writes `data/youtube-channel-videos-latest.json` with an average view estimate.
+
 Ideal example signals:
 
 - Content is practical, repeatable, and tied to real meal routines.
