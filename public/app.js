@@ -13,6 +13,9 @@ const elements = {
   creatorMeta: document.querySelector("#creatorMeta"),
   creatorName: document.querySelector("#creatorName"),
   scoreBadge: document.querySelector("#scoreBadge"),
+  metricOneLabel: document.querySelector("#metricOneLabel"),
+  metricTwoLabel: document.querySelector("#metricTwoLabel"),
+  metricThreeLabel: document.querySelector("#metricThreeLabel"),
   followers: document.querySelector("#followers"),
   engagement: document.querySelector("#engagement"),
   country: document.querySelector("#country"),
@@ -21,6 +24,7 @@ const elements = {
   messageDraft: document.querySelector("#messageDraft"),
   emailTab: document.querySelector("#emailTab"),
   dmTab: document.querySelector("#dmTab"),
+  redditTab: document.querySelector("#redditTab"),
   approveButton: document.querySelector("#approveButton"),
   rejectButton: document.querySelector("#rejectButton")
 };
@@ -31,6 +35,10 @@ function formatNumber(value) {
 
 function getStatus(candidate) {
   return candidate.decision?.status ?? "pending";
+}
+
+function isReddit(candidate) {
+  return candidate.type === "reddit";
 }
 
 function filteredCandidates() {
@@ -59,22 +67,36 @@ function renderCreatorList() {
   elements.creatorList.innerHTML = "";
 
   for (const candidate of candidates) {
-    const creator = candidate.creator;
     const status = getStatus(candidate);
     const button = document.createElement("button");
     button.type = "button";
     button.className = `creator-row${candidate.id === selectedId ? " active" : ""}`;
-    button.innerHTML = `
-      <div class="creator-row-top">
-        <strong>${creator.displayName}</strong>
-        <span class="pill ${status}">${status}</span>
-      </div>
-      <p>${creator.platform} ${creator.handle} · ${formatNumber(creator.followers)} followers</p>
-      <p>${candidate.score.total}/100 · ${candidate.score.recommendation} · ${creator.specificContentAngle}</p>
-    `;
+
+    if (isReddit(candidate)) {
+      const reddit = candidate.reddit;
+      button.innerHTML = `
+        <div class="creator-row-top">
+          <strong>r/${reddit.subreddit}</strong>
+          <span class="pill ${status}">${status}</span>
+        </div>
+        <p>Reddit post - ${reddit.postTitle}</p>
+        <p>${candidate.score.total}/100 - ${candidate.score.recommendation} - ${reddit.intent}</p>
+      `;
+    } else {
+      const creator = candidate.creator;
+      button.innerHTML = `
+        <div class="creator-row-top">
+          <strong>${creator.displayName}</strong>
+          <span class="pill ${status}">${status}</span>
+        </div>
+        <p>${creator.platform} ${creator.handle} - ${formatNumber(creator.followers)} followers</p>
+        <p>${candidate.score.total}/100 - ${candidate.score.recommendation} - ${creator.specificContentAngle}</p>
+      `;
+    }
+
     button.addEventListener("click", () => {
       selectedId = candidate.id;
-      activeDraft = "email";
+      activeDraft = isReddit(candidate) ? "reddit" : "email";
       render();
     });
     elements.creatorList.append(button);
@@ -83,6 +105,33 @@ function renderCreatorList() {
   if (!candidates.some((candidate) => candidate.id === selectedId)) {
     selectedId = candidates[0]?.id ?? null;
   }
+}
+
+function renderReasons(candidate) {
+  elements.reasonList.innerHTML = "";
+  for (const reason of candidate.score.reasons) {
+    const item = document.createElement("li");
+    item.textContent = reason;
+    elements.reasonList.append(item);
+  }
+}
+
+function renderDraftTabs(candidate) {
+  const reddit = isReddit(candidate);
+  elements.emailTab.classList.toggle("hidden", reddit);
+  elements.dmTab.classList.toggle("hidden", reddit);
+  elements.redditTab.classList.toggle("hidden", !reddit);
+
+  if (reddit) {
+    activeDraft = "reddit";
+  } else if (activeDraft === "reddit") {
+    activeDraft = "email";
+  }
+
+  elements.emailTab.classList.toggle("active", activeDraft === "email");
+  elements.dmTab.classList.toggle("active", activeDraft === "dm");
+  elements.redditTab.classList.toggle("active", activeDraft === "reddit");
+  elements.messageDraft.value = candidate.drafts[activeDraft] ?? "";
 }
 
 function renderDetail() {
@@ -94,29 +143,37 @@ function renderDetail() {
     return;
   }
 
-  const creator = candidate.creator;
   const status = getStatus(candidate);
 
   elements.emptyState.classList.add("hidden");
   elements.detailPanel.classList.remove("hidden");
-  elements.creatorMeta.textContent = `${creator.platform} ${creator.handle} · ${candidate.score.recommendation}`;
-  elements.creatorName.textContent = creator.displayName;
   elements.scoreBadge.textContent = `${candidate.score.total}`;
-  elements.followers.textContent = formatNumber(creator.followers);
-  elements.engagement.textContent = creator.engagementLevel;
-  elements.country.textContent = `${creator.country}, ${creator.language}`;
   elements.decisionStatus.textContent = status;
 
-  elements.reasonList.innerHTML = "";
-  for (const reason of candidate.score.reasons) {
-    const item = document.createElement("li");
-    item.textContent = reason;
-    elements.reasonList.append(item);
+  if (isReddit(candidate)) {
+    const reddit = candidate.reddit;
+    elements.creatorMeta.textContent = `Reddit - r/${reddit.subreddit} - ${candidate.score.recommendation}`;
+    elements.creatorName.textContent = reddit.postTitle;
+    elements.metricOneLabel.textContent = "Intent";
+    elements.metricTwoLabel.textContent = "Relevance";
+    elements.metricThreeLabel.textContent = "Mention App";
+    elements.followers.textContent = reddit.intent;
+    elements.engagement.textContent = reddit.relevance;
+    elements.country.textContent = reddit.shouldMentionApp ? "Yes, with disclosure" : "No";
+  } else {
+    const creator = candidate.creator;
+    elements.creatorMeta.textContent = `${creator.platform} ${creator.handle} - ${candidate.score.recommendation}`;
+    elements.creatorName.textContent = creator.displayName;
+    elements.metricOneLabel.textContent = "Followers";
+    elements.metricTwoLabel.textContent = "Engagement";
+    elements.metricThreeLabel.textContent = "Country";
+    elements.followers.textContent = formatNumber(creator.followers);
+    elements.engagement.textContent = creator.engagementLevel;
+    elements.country.textContent = `${creator.country}, ${creator.language}`;
   }
 
-  elements.emailTab.classList.toggle("active", activeDraft === "email");
-  elements.dmTab.classList.toggle("active", activeDraft === "dm");
-  elements.messageDraft.value = candidate.drafts[activeDraft];
+  renderReasons(candidate);
+  renderDraftTabs(candidate);
 }
 
 function render() {
@@ -165,6 +222,11 @@ elements.emailTab.addEventListener("click", () => {
 
 elements.dmTab.addEventListener("click", () => {
   activeDraft = "dm";
+  renderDetail();
+});
+
+elements.redditTab.addEventListener("click", () => {
+  activeDraft = "reddit";
   renderDetail();
 });
 

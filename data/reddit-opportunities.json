@@ -1,0 +1,35 @@
+[
+  {
+    "id": "reddit:meal-prep-hate-sample",
+    "subreddit": "MealPrepSunday",
+    "postTitle": "I hate meal prep but I need to stop ordering food",
+    "postUrl": "https://www.reddit.com/r/MealPrepSunday/",
+    "intent": "hates meal prep",
+    "painPoint": "Meal prep feels like a chore and the poster wants an easier way to plan food.",
+    "relevance": "high",
+    "shouldMentionApp": true,
+    "helpfulAngle": "start with a small repeatable meal formula instead of planning an entire week"
+  },
+  {
+    "id": "reddit:dont-know-what-to-cook-sample",
+    "subreddit": "EatCheapAndHealthy",
+    "postTitle": "I never know what to cook anymore",
+    "postUrl": "https://www.reddit.com/r/EatCheapAndHealthy/",
+    "intent": "does not know what to cook",
+    "painPoint": "The poster is decision-fatigued and needs simple meal ideas.",
+    "relevance": "high",
+    "shouldMentionApp": true,
+    "helpfulAngle": "build meals from protein, carb, vegetable, and sauce options"
+  },
+  {
+    "id": "reddit:tired-of-searching-sample",
+    "subreddit": "Cooking",
+    "postTitle": "Tired of searching for meals every week",
+    "postUrl": "https://www.reddit.com/r/Cooking/",
+    "intent": "tired of searching for meals",
+    "painPoint": "The poster spends too much time finding recipes and wants less planning overhead.",
+    "relevance": "medium",
+    "shouldMentionApp": false,
+    "helpfulAngle": "keep a small rotation of default meals and swap sauces or sides"
+  }
+]

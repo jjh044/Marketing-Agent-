@@ -73,6 +73,19 @@ http://localhost:5173
 
 Approvals and rejections are saved to `data/approval-decisions.json`.
 
+## Reddit Outreach
+
+The agent can also queue Reddit comment drafts for review. Reddit drafts are designed to be helpful first and only mention Meal Prep AI when it is directly relevant.
+
+Important guardrails:
+
+- Do not hide the connection to Meal Prep AI.
+- Do not mass-post repeated comments.
+- Do not comment in subreddits that prohibit self-promotion.
+- Every Reddit comment must be approved before posting.
+
+See `docs/reddit-workflow.md` and `templates/reddit-comment.md`.
+
 ## Next Integrations
 
 - Creator discovery APIs or curated CSV imports.

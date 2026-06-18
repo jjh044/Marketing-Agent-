@@ -32,7 +32,7 @@
 
       <section class="detail" aria-live="polite">
         <div id="emptyState" class="empty-state">
-          Select a creator to review the score, outreach angle, and draft message.
+          Select an outreach item to review the score, context, and draft message.
         </div>
 
         <article id="detailPanel" class="detail-panel hidden">
@@ -46,15 +46,15 @@
 
           <div class="metrics" aria-label="Creator metrics">
             <div>
-              <span>Followers</span>
+              <span id="metricOneLabel">Followers</span>
               <strong id="followers"></strong>
             </div>
             <div>
-              <span>Engagement</span>
+              <span id="metricTwoLabel">Engagement</span>
               <strong id="engagement"></strong>
             </div>
             <div>
-              <span>Country</span>
+              <span id="metricThreeLabel">Country</span>
               <strong id="country"></strong>
             </div>
             <div>
@@ -64,7 +64,7 @@
           </div>
 
           <section class="section">
-            <h3>Why This Creator</h3>
+            <h3>Why This Item</h3>
             <ul id="reasonList" class="reason-list"></ul>
           </section>
 
@@ -73,6 +73,7 @@
             <div class="message-tabs">
               <button id="emailTab" class="tab active" type="button">Email</button>
               <button id="dmTab" class="tab" type="button">DM</button>
+              <button id="redditTab" class="tab hidden" type="button">Reddit</button>
             </div>
             <textarea id="messageDraft" spellcheck="true"></textarea>
           </section>

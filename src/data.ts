@@ -1,7 +1,7 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { CampaignConfig, CreatorCandidate } from "./types.js";
+import type { CampaignConfig, CreatorCandidate, RedditOpportunity } from "./types.js";
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -23,4 +23,8 @@ export async function loadCampaign(): Promise<CampaignConfig> {
 
 export async function loadCreatorCandidates(): Promise<CreatorCandidate[]> {
   return readJsonFile<CreatorCandidate[]>("data/creator-candidates.json");
+}
+
+export async function loadRedditOpportunities(): Promise<RedditOpportunity[]> {
+  return readJsonFile<RedditOpportunity[]>("data/reddit-opportunities.json");
 }

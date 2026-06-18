@@ -10,7 +10,7 @@
     "minFollowers": 10000,
     "maxFollowers": 150000,
     "discoveryPlatforms": ["TikTok", "YouTube"],
-    "outreachChannels": ["TikTok", "Instagram", "X", "Email"],
+    "outreachChannels": ["TikTok", "Instagram", "X", "Email", "Reddit"],
     "preferredPlatforms": ["TikTok", "YouTube"],
     "countries": ["United States", "Australia"],
     "languages": ["English"],
@@ -61,6 +61,38 @@
     "contactOneAtATime": true,
     "requiresApprovalBeforeFirstContact": true,
     "requiresApprovalBeforeEveryMessage": true
+  },
+  "reddit": {
+    "enabled": true,
+    "scanQueries": [
+      "I hate meal prep",
+      "I don't know what to cook",
+      "tired of searching for meals",
+      "meal prep is overwhelming",
+      "what should I cook this week",
+      "I never know what to make for dinner",
+      "healthy meals are too much work",
+      "budget meal ideas"
+    ],
+    "targetSubreddits": [
+      "MealPrepSunday",
+      "EatCheapAndHealthy",
+      "loseit",
+      "Cooking",
+      "budgetfood",
+      "xxfitness",
+      "fitness30plus"
+    ],
+    "tone": "sincere, useful, casual, non-salesy, and transparent",
+    "rules": [
+      "Draft helpful advice first.",
+      "Only mention Meal Prep AI when it directly fits the user's problem.",
+      "Disclose the connection when Meal Prep AI is mentioned.",
+      "Do not pretend to be an unaffiliated user.",
+      "Do not post the same comment repeatedly.",
+      "Do not comment in subreddits that prohibit app promotion or self-promotion.",
+      "Require approval before every Reddit comment."
+    ]
   },
   "schedule": {
     "timezone": "America/Chicago",

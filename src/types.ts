@@ -1,4 +1,4 @@
-export type Platform = "TikTok" | "Instagram" | "YouTube" | "X" | "Email" | "Other";
+export type Platform = "TikTok" | "Instagram" | "YouTube" | "X" | "Email" | "Reddit" | "Other";
 
 export interface CampaignConfig {
   app: {
@@ -35,6 +35,13 @@ export interface CampaignConfig {
     contactOneAtATime: boolean;
     requiresApprovalBeforeFirstContact: boolean;
     requiresApprovalBeforeEveryMessage: boolean;
+  };
+  reddit: {
+    enabled: boolean;
+    scanQueries: string[];
+    targetSubreddits: string[];
+    tone: string;
+    rules: string[];
   };
   schedule: {
     timezone: string;
@@ -74,4 +81,16 @@ export interface CreatorScore {
   brandSafety: number;
   recommendation: "outreach" | "review" | "skip";
   reasons: string[];
+}
+
+export interface RedditOpportunity {
+  id: string;
+  subreddit: string;
+  postTitle: string;
+  postUrl: string;
+  intent: string;
+  painPoint: string;
+  relevance: "low" | "medium" | "high";
+  shouldMentionApp: boolean;
+  helpfulAngle: string;
 }
