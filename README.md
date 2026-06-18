@@ -122,6 +122,27 @@ npm run youtube:details -- "UCJ5v_MCY6GNUBTO8-D3XoAg"
 
 That saves normalized channel details to `data/youtube-channel-details-latest.json`.
 
+To turn configured YouTube channel IDs into dashboard creator candidates:
+
+```powershell
+npm run youtube:import-creators
+```
+
+Channel IDs live in `data/youtube-channel-ids.json`. Imported candidates are written to `data/youtube-creator-candidates.json`, which is local-only and ignored by git.
+
+Check whether local API keys are configured:
+
+```powershell
+npm run integrations:check
+```
+
+For local development, create `.env.local`:
+
+```text
+RAPIDAPI_REDDIT_KEY=your-reddit-rapidapi-key
+YOUTUBE_RAPIDAPI_KEY=your-youtube-rapidapi-key
+```
+
 ## Next Integrations
 
 - Creator discovery APIs or curated CSV imports.

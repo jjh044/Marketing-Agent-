@@ -1,6 +1,8 @@
 import https from "node:https";
+import { loadLocalEnv } from "./env.js";
 
 export function redditApiKey(): string {
+  loadLocalEnv();
   const apiKey = process.env.RAPIDAPI_REDDIT_KEY;
   if (!apiKey) {
     throw new Error("Missing RAPIDAPI_REDDIT_KEY environment variable.");

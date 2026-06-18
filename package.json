@@ -11,6 +11,8 @@
     "reddit:comments": "tsx src/reddit-comments.ts",
     "youtube:channel": "tsx src/youtube-channel-videos.ts",
     "youtube:details": "tsx src/youtube-channel-details.ts",
+    "youtube:import-creators": "tsx src/youtube-import-creators.ts",
+    "integrations:check": "tsx src/check-integrations.ts",
     "check": "tsc --noEmit"
   },
   "dependencies": {

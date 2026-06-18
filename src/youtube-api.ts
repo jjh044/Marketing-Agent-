@@ -1,6 +1,8 @@
 import https from "node:https";
+import { loadLocalEnv } from "./env.js";
 
 export function youtubeApiKey(): string {
+  loadLocalEnv();
   const apiKey = process.env.YOUTUBE_RAPIDAPI_KEY ?? process.env.RAPIDAPI_YOUTUBE_KEY;
   if (!apiKey) {
     throw new Error("Missing YOUTUBE_RAPIDAPI_KEY environment variable.");

@@ -1,4 +1,5 @@
 import { readFile, writeFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { CampaignConfig, CreatorCandidate, RedditOpportunity } from "./types.js";
@@ -22,7 +23,16 @@ export async function loadCampaign(): Promise<CampaignConfig> {
 }
 
 export async function loadCreatorCandidates(): Promise<CreatorCandidate[]> {
-  return readJsonFile<CreatorCandidate[]>("data/creator-candidates.json");
+  const base = await readJsonFile<CreatorCandidate[]>("data/creator-candidates.json");
+  const youtubeCandidatesPath = projectPath("data/youtube-creator-candidates.json");
+  if (!existsSync(youtubeCandidatesPath)) {
+    return base;
+  }
+
+  const youtubeCandidates = await readJsonFile<CreatorCandidate[]>(
+    "data/youtube-creator-candidates.json"
+  );
+  return [...base, ...youtubeCandidates];
 }
 
 export async function loadRedditOpportunities(): Promise<RedditOpportunity[]> {

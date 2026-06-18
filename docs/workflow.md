@@ -55,6 +55,14 @@ npm run youtube:details -- "UCJ5v_MCY6GNUBTO8-D3XoAg"
 
 The command writes `data/youtube-channel-details-latest.json`.
 
+To import channels from `data/youtube-channel-ids.json` into the approval dashboard:
+
+```powershell
+npm run youtube:import-creators
+```
+
+The imported candidates are written to `data/youtube-creator-candidates.json`, which is ignored by git.
+
 Ideal example signals:
 
 - Content is practical, repeatable, and tied to real meal routines.
