@@ -47,6 +47,14 @@ npm run youtube:channel -- "UCJ5v_MCY6GNUBTO8-D3XoAg"
 
 The command fetches recent videos through RapidAPI and writes `data/youtube-channel-videos-latest.json` with an average view estimate.
 
+To fetch channel details such as title, subscribers, video count, and country:
+
+```powershell
+npm run youtube:details -- "UCJ5v_MCY6GNUBTO8-D3XoAg"
+```
+
+The command writes `data/youtube-channel-details-latest.json`.
+
 Ideal example signals:
 
 - Content is practical, repeatable, and tied to real meal routines.

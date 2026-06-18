@@ -5,3 +5,4 @@ dist/
 *.log
 data/reddit-comments-latest.json
 data/youtube-channel-videos-latest.json
+data/youtube-channel-details-latest.json

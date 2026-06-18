@@ -114,6 +114,14 @@ npm run youtube:channel -- "UCJ5v_MCY6GNUBTO8-D3XoAg"
 
 That saves the latest channel video data and average view estimate to `data/youtube-channel-videos-latest.json`.
 
+To fetch channel profile details:
+
+```powershell
+npm run youtube:details -- "UCJ5v_MCY6GNUBTO8-D3XoAg"
+```
+
+That saves normalized channel details to `data/youtube-channel-details-latest.json`.
+
 ## Next Integrations
 
 - Creator discovery APIs or curated CSV imports.
