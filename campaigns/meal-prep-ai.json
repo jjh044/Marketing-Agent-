@@ -1,0 +1,76 @@
+{
+  "app": {
+    "name": "Meal Prep AI",
+    "category": "health, fitness, nutrition, and productivity",
+    "shortDescription": "An AI meal prep app that helps busy people plan healthy meals, organize groceries, and stay consistent.",
+    "partnerPageUrl": "https://mealprepai-two.vercel.app/partners",
+    "storeLinksAvailable": false
+  },
+  "creatorProfile": {
+    "minFollowers": 10000,
+    "maxFollowers": 150000,
+    "discoveryPlatforms": ["TikTok", "YouTube"],
+    "outreachChannels": ["TikTok", "Instagram", "X", "Email"],
+    "preferredPlatforms": ["TikTok", "YouTube"],
+    "countries": ["United States", "Australia"],
+    "languages": ["English"],
+    "engagementLevel": "medium to high",
+    "targetTopics": [
+      "meal prep",
+      "healthy recipes",
+      "weight loss",
+      "fitness",
+      "personal training",
+      "busy moms",
+      "busy parent meals",
+      "student meals",
+      "budget meals",
+      "budget friendly meals",
+      "high protein meals",
+      "grocery hauls"
+    ],
+    "avoidTopics": [
+      "crash dieting",
+      "unsafe supplements",
+      "unrelated luxury lifestyle",
+      "general meme pages"
+    ],
+    "audienceSignals": [
+      "busy professionals",
+      "parents",
+      "busy moms",
+      "students",
+      "personal training clients",
+      "fitness beginners",
+      "budget conscious shoppers",
+      "people trying to eat healthier",
+      "people who cook at home"
+    ]
+  },
+  "outreach": {
+    "senderName": "James",
+    "senderEmail": "creativesolutionssupport@gmail.com",
+    "tone": "laid back, professional, concise, and Midwest-friendly",
+    "offerSummary": "Rev-share creator partnership for promoting Meal Prep AI to an aligned audience.",
+    "dealType": "revenue share",
+    "excludePaidSponsorships": true,
+    "primaryCallToAction": "review the partner page",
+    "followUpAfterDays": 4,
+    "maxAttemptsPerCreator": 2,
+    "maxCreatorsContactedPerDay": 3,
+    "contactOneAtATime": true,
+    "requiresApprovalBeforeFirstContact": true,
+    "requiresApprovalBeforeEveryMessage": true
+  },
+  "schedule": {
+    "timezone": "America/Chicago",
+    "meetingLengthMinutes": 20,
+    "availableWindows": [
+      {
+        "days": ["Tuesday", "Wednesday", "Thursday"],
+        "start": "10:00",
+        "end": "15:00"
+      }
+    ]
+  }
+}
