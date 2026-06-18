@@ -3,6 +3,7 @@ import { loadLocalEnv } from "./env.js";
 import { fetchChannelDetails } from "./youtube-channel-details.js";
 import { fetchChannelVideos } from "./youtube-channel-videos.js";
 import type { CreatorCandidate } from "./types.js";
+import { pathToFileURL } from "node:url";
 
 interface ChannelSeed {
   channelId: string;
@@ -101,7 +102,7 @@ export async function importYouTubeCreators(): Promise<YouTubeCreatorCandidate[]
   return candidates;
 }
 
-if (import.meta.url === `file://${process.argv[1]?.replaceAll("\\", "/")}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const candidates = await importYouTubeCreators();
   console.log(`Saved ${candidates.length} YouTube creator candidates to data/youtube-creator-candidates.json`);
 }

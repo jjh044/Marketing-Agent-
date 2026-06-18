@@ -1,5 +1,6 @@
 import { writeJsonFile } from "./data.js";
 import { requestYouTubeJson } from "./youtube-api.js";
+import { pathToFileURL } from "node:url";
 
 interface RapidApiVideo {
   videoId?: string;
@@ -86,7 +87,7 @@ export async function fetchChannelVideos(channelId: string): Promise<SavedYouTub
   return videosFromResponse(response).map(normalizeVideo);
 }
 
-if (import.meta.url === `file://${process.argv[1]?.replaceAll("\\", "/")}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const channelId = process.argv[2];
   if (!channelId) {
     throw new Error("Usage: npm run youtube:channel -- <youtube-channel-id>");

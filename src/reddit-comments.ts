@@ -1,5 +1,6 @@
 import { writeJsonFile } from "./data.js";
 import { requestRedditJson } from "./reddit-api.js";
+import { pathToFileURL } from "node:url";
 
 interface RapidApiComment {
   id?: string;
@@ -62,7 +63,7 @@ export async function fetchRedditComments(postUrl: string): Promise<SavedRedditC
   return flattenComments(commentsFromResponse(response));
 }
 
-if (import.meta.url === `file://${process.argv[1]?.replaceAll("\\", "/")}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const postUrl = process.argv[2];
   if (!postUrl) {
     throw new Error("Usage: npm run reddit:comments -- <reddit-post-url>");

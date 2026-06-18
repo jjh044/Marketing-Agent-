@@ -1,6 +1,7 @@
 import { loadCampaign, writeJsonFile } from "./data.js";
 import { requestRedditJson } from "./reddit-api.js";
 import type { RedditOpportunity } from "./types.js";
+import { pathToFileURL } from "node:url";
 
 interface RapidApiPost {
   id?: string;
@@ -12,16 +13,39 @@ interface RapidApiPost {
   score?: number;
   num_comments?: number;
   created_utc?: number;
+  data?: RapidApiPost;
 }
 
 interface RapidApiResponse {
-  data?: RapidApiPost[];
+  data?: RapidApiPost[] | { posts?: RapidApiPost[]; data?: RapidApiPost[]; results?: RapidApiPost[] };
   posts?: RapidApiPost[];
   results?: RapidApiPost[];
+  body?: RapidApiPost[] | { data?: RapidApiPost[]; posts?: RapidApiPost[]; results?: RapidApiPost[] };
+  [key: string]: unknown;
 }
 
 function postsFromResponse(response: RapidApiResponse): RapidApiPost[] {
-  return response.data ?? response.posts ?? response.results ?? [];
+  if (Array.isArray(response.data)) return response.data.map((post) => post.data ?? post);
+  if (response.data && typeof response.data === "object") {
+    const data = response.data as RapidApiResponse;
+    if (Array.isArray(data.posts)) return data.posts.map((post) => post.data ?? post);
+    if (Array.isArray(data.data)) return data.data.map((post) => post.data ?? post);
+    if (Array.isArray(data.results)) return data.results.map((post) => post.data ?? post);
+  }
+  if (Array.isArray(response.posts)) return response.posts;
+  if (Array.isArray(response.results)) return response.results;
+  if (Array.isArray(response.body)) return response.body;
+  if (response.body && typeof response.body === "object") {
+    const body = response.body as RapidApiResponse;
+    if (Array.isArray(body.data)) return body.data;
+    if (Array.isArray(body.posts)) return body.posts;
+    if (Array.isArray(body.results)) return body.results;
+  }
+
+  const nestedArray = Object.values(response).find((value) => Array.isArray(value));
+  return Array.isArray(nestedArray)
+    ? (nestedArray as RapidApiPost[]).map((post) => post.data ?? post)
+    : [];
 }
 
 function postUrl(post: RapidApiPost): string {
@@ -88,7 +112,7 @@ export async function scanReddit(): Promise<RedditOpportunity[]> {
   return results;
 }
 
-if (import.meta.url === `file://${process.argv[1]?.replaceAll("\\", "/")}`) {
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const results = await scanReddit();
   console.log(`Saved ${results.length} Reddit opportunities to data/reddit-opportunities.json`);
 }
