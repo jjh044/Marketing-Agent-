@@ -86,6 +86,15 @@ Important guardrails:
 
 See `docs/reddit-workflow.md` and `templates/reddit-comment.md`.
 
+To scan Reddit through RapidAPI, set:
+
+```powershell
+$env:RAPIDAPI_REDDIT_KEY="your-key"
+npm run reddit:scan
+```
+
+The scan writes matching posts to `data/reddit-opportunities.json`, where they appear in the approval dashboard.
+
 ## Next Integrations
 
 - Creator discovery APIs or curated CSV imports.

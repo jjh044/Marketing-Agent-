@@ -44,3 +44,23 @@ The comment should feel like a useful human reply:
 4. The dashboard shows the post, reason, and draft comment.
 5. James approves, rejects, or edits the draft.
 6. Posting remains manual or uses an approved Reddit API integration later.
+
+## RapidAPI Search
+
+The project includes a RapidAPI Reddit search client at `src/reddit-search.ts`.
+
+Set the API key in the current terminal session:
+
+```powershell
+$env:RAPIDAPI_REDDIT_KEY="your-key"
+```
+
+Run a scan:
+
+```powershell
+npm run reddit:scan
+```
+
+The scanner uses the campaign's configured `reddit.scanQueries`, calls `reddit34.p.rapidapi.com/getSearchPosts`, and overwrites `data/reddit-opportunities.json` with draftable opportunities.
+
+Do not commit API keys. Keep them in environment variables or a local `.env` file that is ignored by git.
