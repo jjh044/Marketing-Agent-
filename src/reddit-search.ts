@@ -1,5 +1,5 @@
-import https from "node:https";
 import { loadCampaign, writeJsonFile } from "./data.js";
+import { requestRedditJson } from "./reddit-api.js";
 import type { RedditOpportunity } from "./types.js";
 
 interface RapidApiPost {
@@ -18,43 +18,6 @@ interface RapidApiResponse {
   data?: RapidApiPost[];
   posts?: RapidApiPost[];
   results?: RapidApiPost[];
-}
-
-function requestJson<T>(path: string, apiKey: string): Promise<T> {
-  return new Promise((resolve, reject) => {
-    const request = https.request(
-      {
-        method: "GET",
-        hostname: "reddit34.p.rapidapi.com",
-        path,
-        headers: {
-          "x-rapidapi-key": apiKey,
-          "x-rapidapi-host": "reddit34.p.rapidapi.com",
-          "Content-Type": "application/json"
-        }
-      },
-      (response) => {
-        const chunks: Buffer[] = [];
-
-        response.on("data", (chunk) => {
-          chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
-        });
-
-        response.on("end", () => {
-          const body = Buffer.concat(chunks).toString("utf8");
-          if (!response.statusCode || response.statusCode >= 400) {
-            reject(new Error(`RapidAPI Reddit request failed: ${response.statusCode} ${body}`));
-            return;
-          }
-
-          resolve(JSON.parse(body) as T);
-        });
-      }
-    );
-
-    request.on("error", reject);
-    request.end();
-  });
 }
 
 function postsFromResponse(response: RapidApiResponse): RapidApiPost[] {
@@ -106,18 +69,12 @@ function opportunityFromPost(post: RapidApiPost, query: string): RedditOpportuni
 }
 
 export async function scanReddit(): Promise<RedditOpportunity[]> {
-  const apiKey = process.env.RAPIDAPI_REDDIT_KEY;
-  if (!apiKey) {
-    throw new Error("Missing RAPIDAPI_REDDIT_KEY environment variable.");
-  }
-
   const campaign = await loadCampaign();
   const opportunities = new Map<string, RedditOpportunity>();
 
   for (const query of campaign.reddit.scanQueries) {
-    const response = await requestJson<RapidApiResponse>(
-      `/getSearchPosts?query=${encodeURIComponent(query)}`,
-      apiKey
+    const response = await requestRedditJson<RapidApiResponse>(
+      `/getSearchPosts?query=${encodeURIComponent(query)}`
     );
 
     for (const post of postsFromResponse(response).slice(0, 10)) {

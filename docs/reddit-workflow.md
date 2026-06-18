@@ -63,4 +63,12 @@ npm run reddit:scan
 
 The scanner uses the campaign's configured `reddit.scanQueries`, calls `reddit34.p.rapidapi.com/getSearchPosts`, and overwrites `data/reddit-opportunities.json` with draftable opportunities.
 
+To fetch comments from a specific post:
+
+```powershell
+npm run reddit:comments -- "https://www.reddit.com/r/example/comments/post_id/title/"
+```
+
+This calls `reddit34.p.rapidapi.com/getPostComments` and writes `data/reddit-comments-latest.json`. Use this before drafting when the post already has an active discussion, so the reply does not repeat advice others have already given.
+
 Do not commit API keys. Keep them in environment variables or a local `.env` file that is ignored by git.

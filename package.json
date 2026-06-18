@@ -8,6 +8,7 @@
     "dashboard": "tsx src/dashboard.ts",
     "dashboard:open": "powershell -ExecutionPolicy Bypass -File scripts/start-dashboard.ps1",
     "reddit:scan": "tsx src/reddit-search.ts",
+    "reddit:comments": "tsx src/reddit-comments.ts",
     "check": "tsc --noEmit"
   },
   "dependencies": {

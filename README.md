@@ -95,6 +95,14 @@ npm run reddit:scan
 
 The scan writes matching posts to `data/reddit-opportunities.json`, where they appear in the approval dashboard.
 
+To inspect comments on a specific post before drafting:
+
+```powershell
+npm run reddit:comments -- "https://www.reddit.com/r/example/comments/post_id/title/"
+```
+
+That saves the latest fetched comments to `data/reddit-comments-latest.json`.
+
 ## Next Integrations
 
 - Creator discovery APIs or curated CSV imports.
