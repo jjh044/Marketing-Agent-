@@ -1,5 +1,5 @@
 {
-  "name": "the-secret-place-app",
+  "name": "secretplace",
   "version": "0.1.0",
   "private": true,
   "main": "index.ts",

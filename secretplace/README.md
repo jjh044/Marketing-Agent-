@@ -1,6 +1,6 @@
-# The Secret Place
+# secretplace
 
-The Secret Place is a distraction-free Bible study app for iOS, Android, and web. The app starts a timed study session, quiets the phone where the operating system allows it, lets the user enter a passage, and returns word-study notes, a summary, and reflection questions.
+secretplace is a distraction-free Bible study app for iOS, Android, and web. The app starts a timed study session, quiets the phone where the operating system allows it, lets the user enter a passage, and returns word-study notes, a summary, and reflection questions.
 
 ## Run locally
 
@@ -32,7 +32,7 @@ npm run preview
 
 ## Deploy to Vercel
 
-Set the Vercel project root to `the-secret-place-app`.
+Set the Vercel project root to `secretplace`.
 
 Build command:
 

@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot
 
-Write-Host "Starting The Secret Place locally..." -ForegroundColor Green
+Write-Host "Starting secretplace locally..." -ForegroundColor Green
 
 if (-not (Test-Path "node_modules")) {
   Write-Host "Installing dependencies..."

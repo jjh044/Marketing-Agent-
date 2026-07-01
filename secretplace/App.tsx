@@ -42,7 +42,7 @@ function TimingScreen({ onStart }: { onStart: (minutes: number) => void }) {
       <View style={styles.mark}>
         <Text style={styles.markText}>SP</Text>
       </View>
-      <Text style={styles.brand}>The Secret Place</Text>
+      <Text style={styles.brand}>secretplace</Text>
       <Text style={styles.title}>How long are you setting aside?</Text>
       <Text style={styles.subtitle}>Choose your quiet study time first. The Scripture deep dive opens next.</Text>
 

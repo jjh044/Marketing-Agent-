@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "The Secret Place",
-    "slug": "the-secret-place-app",
+    "name": "secretplace",
+    "slug": "secretplace",
     "scheme": "secretplace",
     "version": "0.1.0",
     "orientation": "portrait",
@@ -11,7 +11,7 @@
       "bundleIdentifier": "app.secretplace.mobile",
       "supportsTablet": true,
       "infoPlist": {
-        "NSUserNotificationUsageDescription": "The Secret Place sends a quiet alert when your study session ends."
+        "NSUserNotificationUsageDescription": "secretplace sends a quiet alert when your study session ends."
       }
     },
     "android": {

@@ -42,7 +42,7 @@ server.on("error", (error) => {
 });
 
 server.listen(port, "127.0.0.1", () => {
-  console.log(`The Secret Place preview running at http://127.0.0.1:${port}`);
+  console.log(`secretplace preview running at http://127.0.0.1:${port}`);
 });
 
 async function handleStudyApi(request, response) {

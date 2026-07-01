@@ -22,7 +22,7 @@ export async function scheduleSessionCompleteNotification(minutes: number) {
   await Notifications.scheduleNotificationAsync({
     content: {
       body: "Your quiet Scripture study session is complete.",
-      title: "The Secret Place"
+      title: "secretplace"
     },
     trigger: {
       seconds: minutes * 60,

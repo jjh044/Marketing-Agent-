@@ -49,7 +49,7 @@ export function StudySessionScreen({ selectedMinutes, onChangeTime }: StudySessi
     void endFocusSession();
     setSessionEndsAt(null);
     if (Platform.OS === "web" && "Notification" in globalThis && Notification.permission === "granted") {
-      new Notification("The Secret Place", {
+      new Notification("secretplace", {
         body: "Your quiet Scripture study session is complete."
       });
     }
@@ -124,7 +124,7 @@ export function StudySessionScreen({ selectedMinutes, onChangeTime }: StudySessi
         <View style={styles.mark}>
           <Feather name="book-open" size={26} color="#fbf7ed" />
         </View>
-        <Text style={styles.brand}>The Secret Place</Text>
+        <Text style={styles.brand}>secretplace</Text>
         <Text style={styles.title}>A quiet room for Scripture.</Text>
         <Text style={styles.subtitle}>{sessionSubtitle}</Text>
       </View>
