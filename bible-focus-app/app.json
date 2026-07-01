@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "The Secret Place",
+    "slug": "the-secret-place-app",
+    "scheme": "secretplace",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "bundleIdentifier": "app.secretplace.mobile",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSUserNotificationUsageDescription": "The Secret Place sends a quiet alert when your study session ends."
+      }
+    },
+    "android": {
+      "package": "app.secretplace.mobile",
+      "permissions": [
+        "ACCESS_NOTIFICATION_POLICY",
+        "POST_NOTIFICATIONS"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": [
+      "expo-notifications",
+      "./plugins/withFocusMode.js"
+    ]
+  }
+}
