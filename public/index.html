@@ -10,16 +10,40 @@
     <header class="topbar">
       <div>
         <p class="eyebrow">App Marketing Agent</p>
-        <h1>Meal Prep AI Outreach Review</h1>
+        <h1 id="pageTitle">Outreach Review</h1>
       </div>
-      <div class="status-strip" aria-label="Campaign status">
-        <span id="sender">Sender</span>
-        <span id="dailyLimit">Daily limit</span>
-        <span id="approvalRule">Approval</span>
+      <div class="topbar-controls">
+        <label class="app-switcher">
+          <span>App</span>
+          <select id="appSelect"></select>
+        </label>
+        <div class="status-strip" aria-label="Campaign status">
+          <span id="sender">Sender</span>
+          <span id="dailyLimit">Daily limit</span>
+          <span id="approvalRule">Approval</span>
+        </div>
+        <div id="userMenu" class="user-menu hidden"></div>
       </div>
     </header>
 
-    <main class="layout">
+    <main id="loginView" class="login-view hidden">
+      <section class="login-panel">
+        <p class="eyebrow">Private workspace</p>
+        <h2>Sign in to continue</h2>
+        <p>Use your GitHub account to open the marketing dashboard.</p>
+        <a class="github-button" href="/api/auth/login">Sign in with GitHub</a>
+      </section>
+    </main>
+
+    <main id="setupView" class="login-view hidden">
+      <section class="login-panel">
+        <p class="eyebrow">GitHub login</p>
+        <h2>Auth is not configured</h2>
+        <p>Add the GitHub OAuth environment variables in Vercel, then redeploy.</p>
+      </section>
+    </main>
+
+    <main id="appView" class="layout hidden">
       <aside class="sidebar" aria-label="Creator queue">
         <div class="toolbar">
           <button class="filter active" data-filter="all" type="button">All</button>

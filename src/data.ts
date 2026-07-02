@@ -1,4 +1,4 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { readdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -18,8 +18,32 @@ export async function writeJsonFile(path: string, value: unknown): Promise<void>
   await writeFile(projectPath(path), `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
 
-export async function loadCampaign(): Promise<CampaignConfig> {
-  return readJsonFile<CampaignConfig>("campaigns/meal-prep-ai.json");
+export interface AppOption {
+  id: string;
+  name: string;
+  category: string;
+}
+
+export async function listApps(): Promise<AppOption[]> {
+  const files = (await readdir(projectPath("campaigns"))).filter((file) => file.endsWith(".json"));
+  const apps = await Promise.all(
+    files.map(async (file) => {
+      const id = file.replace(/\.json$/, "");
+      const campaign = await readJsonFile<CampaignConfig>(`campaigns/${file}`);
+      return {
+        id,
+        name: campaign.app.name,
+        category: campaign.app.category
+      };
+    })
+  );
+
+  return apps.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export async function loadCampaign(appId = "meal-prep-ai"): Promise<CampaignConfig> {
+  const safeAppId = appId.replace(/[^a-z0-9-]/gi, "");
+  return readJsonFile<CampaignConfig>(`campaigns/${safeAppId || "meal-prep-ai"}.json`);
 }
 
 export async function loadCreatorCandidates(): Promise<CreatorCandidate[]> {

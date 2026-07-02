@@ -3,6 +3,7 @@ import { existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, resolve } from "node:path";
 import {
+  listApps,
   loadCampaign,
   loadCreatorCandidates,
   loadRedditOpportunities,
@@ -29,11 +30,15 @@ export interface ApprovalDecision {
 
 type ApprovalDecisions = Record<string, ApprovalDecision>;
 
-const decisionsPath = process.env.VERCEL
-  ? resolve(tmpdir(), "approval-decisions.json")
-  : projectPath("data/approval-decisions.json");
+function decisionsFilePath(appId: string): string {
+  const safeAppId = appId.replace(/[^a-z0-9-]/gi, "") || "meal-prep-ai";
+  return process.env.VERCEL
+    ? resolve(tmpdir(), `approval-decisions-${safeAppId}.json`)
+    : projectPath("data/approval-decisions.json");
+}
 
-async function readDecisions(): Promise<ApprovalDecisions> {
+async function readDecisions(appId: string): Promise<ApprovalDecisions> {
+  const decisionsPath = decisionsFilePath(appId);
   if (process.env.VERCEL && existsSync(decisionsPath)) {
     return JSON.parse(await readFile(decisionsPath, "utf8")) as ApprovalDecisions;
   }
@@ -41,7 +46,8 @@ async function readDecisions(): Promise<ApprovalDecisions> {
   return readJsonFile<ApprovalDecisions>("data/approval-decisions.json");
 }
 
-async function writeDecisions(decisions: ApprovalDecisions): Promise<void> {
+async function writeDecisions(appId: string, decisions: ApprovalDecisions): Promise<void> {
+  const decisionsPath = decisionsFilePath(appId);
   if (process.env.VERCEL) {
     await mkdir(dirname(decisionsPath), { recursive: true });
     await writeFile(decisionsPath, `${JSON.stringify(decisions, null, 2)}\n`, "utf8");
@@ -53,23 +59,25 @@ async function writeDecisions(decisions: ApprovalDecisions): Promise<void> {
 
 export async function writeDecision(
   id: string,
-  status: DecisionStatus
+  status: DecisionStatus,
+  appId = "meal-prep-ai"
 ): Promise<ApprovalDecisions> {
-  const decisions = await readDecisions();
+  const decisions = await readDecisions(appId);
   decisions[id] = {
     status,
     decidedAt: new Date().toISOString()
   };
-  await writeDecisions(decisions);
+  await writeDecisions(appId, decisions);
   return decisions;
 }
 
-export async function dashboardData(): Promise<unknown> {
-  const [campaign, creators, redditOpportunities, decisions] = await Promise.all([
-    loadCampaign(),
+export async function dashboardData(appId = "meal-prep-ai"): Promise<unknown> {
+  const [apps, campaign, creators, redditOpportunities, decisions] = await Promise.all([
+    listApps(),
+    loadCampaign(appId),
     loadCreatorCandidates(),
     loadRedditOpportunities(),
-    readDecisions()
+    readDecisions(appId)
   ]);
 
   const creatorCandidates = creators
@@ -146,5 +154,5 @@ export async function dashboardData(): Promise<unknown> {
     campaign
   );
 
-  return { campaign, candidates };
+  return { appId, apps, campaign, candidates };
 }

@@ -2,8 +2,17 @@ let dashboard = null;
 let selectedId = null;
 let activeFilter = "all";
 let activeDraft = "email";
+let session = null;
+let apps = [];
+let activeAppId = window.localStorage.getItem("active-app-id") || "meal-prep-ai";
 
 const elements = {
+  pageTitle: document.querySelector("#pageTitle"),
+  appView: document.querySelector("#appView"),
+  loginView: document.querySelector("#loginView"),
+  setupView: document.querySelector("#setupView"),
+  appSelect: document.querySelector("#appSelect"),
+  userMenu: document.querySelector("#userMenu"),
   sender: document.querySelector("#sender"),
   dailyLimit: document.querySelector("#dailyLimit"),
   approvalRule: document.querySelector("#approvalRule"),
@@ -28,6 +37,12 @@ const elements = {
   approveButton: document.querySelector("#approveButton"),
   rejectButton: document.querySelector("#rejectButton")
 };
+
+function showOnly(view) {
+  elements.loginView.classList.toggle("hidden", view !== "login");
+  elements.setupView.classList.toggle("hidden", view !== "setup");
+  elements.appView.classList.toggle("hidden", view !== "app");
+}
 
 function formatNumber(value) {
   return new Intl.NumberFormat("en-US").format(value);
@@ -55,11 +70,41 @@ function filteredCandidates() {
 
 function renderShell() {
   const { campaign } = dashboard;
+  elements.pageTitle.textContent = `${campaign.app.name} Outreach Review`;
   elements.sender.textContent = `Sender: ${campaign.outreach.senderName}`;
   elements.dailyLimit.textContent = `Daily limit: ${campaign.outreach.maxCreatorsContactedPerDay}`;
   elements.approvalRule.textContent = campaign.outreach.requiresApprovalBeforeEveryMessage
     ? "Approval required"
     : "Auto-send enabled";
+}
+
+function renderAppSelect() {
+  elements.appSelect.innerHTML = "";
+
+  for (const app of apps) {
+    const option = document.createElement("option");
+    option.value = app.id;
+    option.textContent = app.name;
+    option.selected = app.id === activeAppId;
+    elements.appSelect.append(option);
+  }
+
+  elements.appSelect.disabled = apps.length <= 1;
+}
+
+function renderUserMenu() {
+  if (!session) {
+    elements.userMenu.classList.add("hidden");
+    elements.userMenu.innerHTML = "";
+    return;
+  }
+
+  elements.userMenu.classList.remove("hidden");
+  elements.userMenu.innerHTML = `
+    <img src="${session.user.avatarUrl}" alt="">
+    <span>${session.user.login}</span>
+    <a href="/api/auth/logout">Sign out</a>
+  `;
 }
 
 function renderCreatorList() {
@@ -177,16 +222,51 @@ function renderDetail() {
 }
 
 function render() {
+  renderAppSelect();
+  renderUserMenu();
   renderShell();
   renderCreatorList();
   renderDetail();
 }
 
 async function loadDashboard() {
-  const response = await fetch("/api/dashboard");
+  const response = await fetch(`/api/dashboard?appId=${encodeURIComponent(activeAppId)}`);
+  if (response.status === 401) {
+    showOnly("login");
+    return;
+  }
+
   dashboard = await response.json();
+  apps = dashboard.apps ?? apps;
+  activeAppId = dashboard.appId ?? activeAppId;
+  window.localStorage.setItem("active-app-id", activeAppId);
   selectedId = dashboard.candidates[0]?.id ?? null;
+  showOnly("app");
   render();
+}
+
+async function loadSession() {
+  const response = await fetch("/api/me");
+  const data = await response.json();
+  apps = data.apps ?? [];
+  session = data.session;
+
+  if (!data.authConfigured) {
+    showOnly("setup");
+    return false;
+  }
+
+  if (!session) {
+    renderUserMenu();
+    showOnly("login");
+    return false;
+  }
+
+  if (!apps.some((app) => app.id === activeAppId)) {
+    activeAppId = apps[0]?.id ?? "meal-prep-ai";
+  }
+
+  return true;
 }
 
 async function decide(status) {
@@ -197,7 +277,7 @@ async function decide(status) {
   const response = await fetch("/api/decision", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ id: selectedId, status })
+    body: JSON.stringify({ id: selectedId, status, appId: activeAppId })
   });
 
   dashboard = await response.json();
@@ -232,5 +312,13 @@ elements.redditTab.addEventListener("click", () => {
 
 elements.approveButton.addEventListener("click", () => decide("approved"));
 elements.rejectButton.addEventListener("click", () => decide("rejected"));
+elements.appSelect.addEventListener("change", async () => {
+  activeAppId = elements.appSelect.value;
+  window.localStorage.setItem("active-app-id", activeAppId);
+  selectedId = null;
+  await loadDashboard();
+});
 
-await loadDashboard();
+if (await loadSession()) {
+  await loadDashboard();
+}

@@ -41,6 +41,51 @@ textarea {
   background: #fbfaf7;
 }
 
+.topbar-controls {
+  display: grid;
+  justify-items: end;
+  gap: 10px;
+}
+
+.app-switcher {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.app-switcher select {
+  min-height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--text);
+  padding: 7px 32px 7px 10px;
+  font: inherit;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.user-menu img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.user-menu a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
 .eyebrow {
   margin: 0 0 8px;
   color: var(--muted);
@@ -95,6 +140,44 @@ h3 {
   display: grid;
   grid-template-columns: minmax(280px, 390px) 1fr;
   min-height: calc(100vh - 132px);
+}
+
+.login-view {
+  display: grid;
+  min-height: calc(100vh - 132px);
+  place-items: center;
+  padding: 24px;
+}
+
+.login-panel {
+  width: min(440px, 100%);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 28px;
+}
+
+.login-panel h2 {
+  margin-bottom: 10px;
+}
+
+.login-panel p:not(.eyebrow) {
+  margin: 0 0 20px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.github-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  border-radius: 7px;
+  background: #202124;
+  color: #ffffff;
+  padding: 9px 16px;
+  font-weight: 800;
+  text-decoration: none;
 }
 
 .sidebar {
@@ -327,6 +410,10 @@ textarea {
 
   .status-strip {
     justify-content: flex-start;
+  }
+
+  .topbar-controls {
+    justify-items: start;
   }
 
   .layout {
