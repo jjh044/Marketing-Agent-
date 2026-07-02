@@ -10,6 +10,10 @@ const checks = [
   {
     name: "YouTube RapidAPI",
     variables: ["YOUTUBE_RAPIDAPI_KEY", "RAPIDAPI_YOUTUBE_KEY"]
+  },
+  {
+    name: "OpenAI",
+    variables: ["OPENAI_API_KEY"]
   }
 ];
 

@@ -1,31 +1,8 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { readFile } from "node:fs/promises";
 import { extname, join } from "node:path";
-import {
-  loadCampaign,
-  loadCreatorCandidates,
-  loadRedditOpportunities,
-  projectPath,
-  readJsonFile,
-  writeJsonFile
-} from "./data.js";
-import {
-  creatorId,
-  redditOpportunityId,
-  renderDm,
-  renderEmail,
-  renderRedditComment
-} from "./outreach.js";
-import { scoreCreator } from "./scoring.js";
-
-type DecisionStatus = "approved" | "rejected";
-
-interface ApprovalDecision {
-  status: DecisionStatus;
-  decidedAt: string;
-}
-
-type ApprovalDecisions = Record<string, ApprovalDecision>;
+import { projectPath } from "./data.js";
+import { dashboardData, writeDecision, type DecisionStatus } from "./dashboard-data.js";
 
 const port = Number(process.env.PORT ?? 5173);
 
@@ -45,74 +22,6 @@ async function parseBody<T>(request: IncomingMessage): Promise<T> {
     chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
   }
   return JSON.parse(Buffer.concat(chunks).toString("utf8")) as T;
-}
-
-async function readDecisions(): Promise<ApprovalDecisions> {
-  return readJsonFile<ApprovalDecisions>("data/approval-decisions.json");
-}
-
-async function writeDecision(id: string, status: DecisionStatus): Promise<ApprovalDecisions> {
-  const decisions = await readDecisions();
-  decisions[id] = {
-    status,
-    decidedAt: new Date().toISOString()
-  };
-  await writeJsonFile("data/approval-decisions.json", decisions);
-  return decisions;
-}
-
-async function dashboardData(): Promise<unknown> {
-  const [campaign, creators, redditOpportunities, decisions] = await Promise.all([
-    loadCampaign(),
-    loadCreatorCandidates(),
-    loadRedditOpportunities(),
-    readDecisions()
-  ]);
-
-  const creatorCandidates = creators
-    .map((creator) => {
-      const id = creatorId(creator);
-      const score = scoreCreator(creator, campaign);
-      return {
-        id,
-        creator,
-        score,
-        decision: decisions[id] ?? null,
-        drafts: {
-          email: renderEmail(creator, campaign),
-          dm: renderDm(creator, campaign)
-        }
-      };
-    })
-    .sort((a, b) => b.score.total - a.score.total);
-
-  const redditCandidates = redditOpportunities.map((opportunity) => {
-    const id = redditOpportunityId(opportunity);
-    const score = {
-      total: opportunity.relevance === "high" ? 86 : opportunity.relevance === "medium" ? 70 : 45,
-      recommendation: opportunity.relevance === "low" ? "skip" : "review",
-      reasons: [
-        `post intent: ${opportunity.intent}`,
-        `pain point: ${opportunity.painPoint}`,
-        opportunity.shouldMentionApp
-          ? "Meal Prep AI can be mentioned with disclosure"
-          : "draft should stay advice-only without mentioning the app"
-      ]
-    };
-
-    return {
-      id,
-      type: "reddit",
-      reddit: opportunity,
-      score,
-      decision: decisions[id] ?? null,
-      drafts: {
-        reddit: renderRedditComment(opportunity, campaign)
-      }
-    };
-  });
-
-  return { campaign, candidates: [...creatorCandidates, ...redditCandidates] };
 }
 
 async function serveStatic(pathname: string, response: ServerResponse): Promise<void> {
